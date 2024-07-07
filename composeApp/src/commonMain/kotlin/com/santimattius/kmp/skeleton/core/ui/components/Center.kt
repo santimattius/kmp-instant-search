@@ -26,6 +26,6 @@ fun LoadingIndicator() {
 }
 
 @Composable
-fun ErrorView(message: String) {
+fun Message(message: String) {
     Center { Text(message) }
 }

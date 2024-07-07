@@ -2,8 +2,8 @@ package com.santimattius.kmp.skeleton.features.home
 
 import cafe.adriel.voyager.core.model.StateScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
-import com.santimattius.kmp.skeleton.core.data.PictureRepository
-import com.santimattius.kmp.skeleton.core.domain.Picture
+import com.santimattius.kmp.skeleton.core.data.MovieRepository
+import com.santimattius.kmp.skeleton.core.domain.Movie
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -12,11 +12,11 @@ import kotlinx.coroutines.launch
 data class HomeUiState(
     val isLoading: Boolean = false,
     val hasError: Boolean = false,
-    val data: Picture? = null,
+    val data: List<Movie> = emptyList(),
 )
 
 class HomeScreenModel(
-    private val repository: PictureRepository,
+    private val repository: MovieRepository,
 ) : StateScreenModel<HomeUiState>(HomeUiState()) {
 
     private val exceptionHandler = CoroutineExceptionHandler { _, _ ->
@@ -24,17 +24,14 @@ class HomeScreenModel(
     }
 
     init {
-        randomImage()
+        refresh()
     }
 
-    fun randomImage() {
+    private fun refresh() {
         mutableState.update { it.copy(isLoading = true, hasError = false) }
         screenModelScope.launch(exceptionHandler) {
-            repository.random().onSuccess { picture ->
-                mutableState.update { it.copy(isLoading = false, data = picture) }
-            }.onFailure {
-                mutableState.update { it.copy(isLoading = false, hasError = true) }
-            }
+            val movies = repository.getMovies()
+            mutableState.update { it.copy(isLoading = false, data = movies) }
         }
     }
 }

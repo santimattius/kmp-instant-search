@@ -1,9 +1,13 @@
+import com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING
+import org.jetbrains.compose.internal.utils.getLocalProperty
+
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsCompose)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kotlinSerialization)
+    id("com.codingfeline.buildkonfig")
 }
 
 kotlin {
@@ -38,8 +42,6 @@ kotlin {
             api(libs.androidx.appcompat)
             api(libs.androidx.core.ktx)
 
-
-
             implementation(libs.ktor.client.okhttp)
             implementation(libs.kotlinx.coroutines.android)
 
@@ -68,6 +70,8 @@ kotlin {
 
             api(libs.koin.core)
             api(libs.koin.compose)
+
+            implementation(libs.kermit)
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
@@ -77,6 +81,15 @@ kotlin {
 
 composeCompiler {
     enableStrongSkippingMode = true
+}
+
+buildkonfig {
+    packageName = "com.santimattius.kmp.skeleton"
+    objectName = "BuildConfig"
+
+    defaultConfigs {
+        buildConfigField(STRING, "apiKey", getLocalProperty("apiKey"))
+    }
 }
 
 android {
