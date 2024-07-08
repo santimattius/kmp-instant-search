@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.jetbrainsCompose)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kotlinSerialization)
+    alias(libs.plugins.sqldelight)
     id("com.codingfeline.buildkonfig")
 }
 
@@ -37,6 +38,7 @@ kotlin {
         androidMain.dependencies {
             implementation(libs.compose.ui.tooling.preview)
             implementation(libs.androidx.activity.compose)
+            implementation(libs.androidx.startup.runtime)
 
             api(libs.androidx.activity.compose)
             api(libs.androidx.appcompat)
@@ -46,6 +48,8 @@ kotlin {
             implementation(libs.kotlinx.coroutines.android)
 
             implementation(libs.koin.android)
+
+            implementation(libs.sqldelight.android.driver)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -72,9 +76,13 @@ kotlin {
             api(libs.koin.compose)
 
             implementation(libs.kermit)
+
+            implementation(libs.sqldelight.coroutines.extensions)
         }
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
+
+            implementation(libs.sqldelight.ios.driver)
         }
     }
 }
@@ -90,6 +98,18 @@ buildkonfig {
     defaultConfigs {
         buildConfigField(STRING, "apiKey", getLocalProperty("apiKey"))
     }
+}
+
+sqldelight {
+    databases {
+        create("MoviesDatabase") {
+            packageName.set("com.santimattius.kmp.skeleton")
+            dialect("app.cash.sqldelight:sqlite-3-38-dialect:2.0.2")
+        }
+    }
+
+    linkSqlite.set(true)
+
 }
 
 android {

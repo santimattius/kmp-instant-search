@@ -1,0 +1,17 @@
+import kotlin.Boolean;
+
+CREATE TABLE MovieEntity (
+    id INTEGER PRIMARY KEY NOT NULL,
+    title TEXT NOT NULL,
+    image TEXT NOT NULL,
+    overview TEXT NOT NULL,
+    favorite INTEGER AS Boolean DEFAULT 0
+);
+
+selectAll:
+SELECT * FROM MovieEntity;
+
+insert:
+INSERT INTO MovieEntity(id,title,image,overview)
+VALUES(?, ?, ?,?)
+ON CONFLICT (id) DO UPDATE SET title=excluded.title, image=excluded.image,overview=excluded.overview;

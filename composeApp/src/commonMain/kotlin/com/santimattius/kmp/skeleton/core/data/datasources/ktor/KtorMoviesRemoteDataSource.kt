@@ -1,15 +1,15 @@
 package com.santimattius.kmp.skeleton.core.data.datasources.ktor
 
-import com.santimattius.kmp.skeleton.core.data.datasources.RemoteMoviesDataSource
+import com.santimattius.kmp.skeleton.core.data.datasources.MoviesRemoteDataSource
 import com.santimattius.kmp.skeleton.core.data.models.MovieResponse
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import com.santimattius.kmp.skeleton.core.data.models.Movie as MovieDto
 
-class KtorRemoteMoviesDataSource(
+class KtorMoviesRemoteDataSource(
     private val client: HttpClient,
-) : RemoteMoviesDataSource {
+) : MoviesRemoteDataSource {
 
     override suspend fun getMovies(): Result<List<MovieDto>> = runCatching {
         val response = client.get("movie/popular")

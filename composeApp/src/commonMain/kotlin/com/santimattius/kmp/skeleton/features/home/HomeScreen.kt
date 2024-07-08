@@ -63,7 +63,7 @@ fun HomeScreenContent(
             contentAlignment = Alignment.Center
         ) {
 
-            val state by screenModel.state.collectAsState()
+            val state by screenModel.uiState.collectAsState()
             when {
                 state.isLoading -> LoadingIndicator()
 
