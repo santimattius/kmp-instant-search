@@ -9,6 +9,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 class SQLDelightMovieLocalDataSource(
     db: MoviesDatabase,
@@ -26,6 +27,26 @@ class SQLDelightMovieLocalDataSource(
                 val (id, title, image, overview) = movie
                 queries.insert(id, title, image, overview)
             }
+        }
+    }
+
+    override fun search(query: String): Flow<List<MovieEntity>> {
+        return if (query.isEmpty()) {
+            all
+        } else {
+            queries.search(queryString = query)
+                .asFlow()
+                .mapToList(dispatcher).map {
+                    it.map { movie ->
+                        MovieEntity(
+                            id = movie.id,
+                            title = movie.title,
+                            image = movie.image,
+                            overview = movie.overview,
+                            favorite = movie.favorite
+                        )
+                    }
+                }
         }
     }
 }

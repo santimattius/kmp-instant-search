@@ -8,4 +8,6 @@ interface MovieLocalDataSource {
     val all: Flow<List<MovieEntity>>
 
     suspend fun insertOrUpdate(movies: List<MovieEntity>): Result<Unit>
+
+    fun search(query: String): Flow<List<MovieEntity>>
 }

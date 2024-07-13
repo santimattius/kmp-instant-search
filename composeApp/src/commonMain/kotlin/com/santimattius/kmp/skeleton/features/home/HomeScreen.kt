@@ -27,10 +27,10 @@ import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.getScreenModel
 import com.santimattius.kmp.skeleton.core.domain.Movie
-import com.santimattius.kmp.skeleton.core.ui.components.AppBar
 import com.santimattius.kmp.skeleton.core.ui.components.LoadingIndicator
 import com.santimattius.kmp.skeleton.core.ui.components.Message
 import com.santimattius.kmp.skeleton.core.ui.components.NetworkImage
+import com.santimattius.kmp.skeleton.core.ui.components.SearchableTopAppBar
 
 object HomeScreen : Screen {
 
@@ -45,17 +45,15 @@ object HomeScreen : Screen {
 fun HomeScreenContent(
     screenModel: HomeScreenModel,
 ) {
+    val searchQuery by screenModel.searchQuery.collectAsState()
     Scaffold(
         topBar = {
-            AppBar(title = "Compose Skeleton")
-//            SearchableTopAppBar(
-//                text = searchQuery,
-//                onTextChange = { text ->
-//                    searchQuery = text
-//                },
-//                placeholder = "type your search here",
-//                title = "Compose Skeleton"
-//            )
+            SearchableTopAppBar(
+                text = searchQuery,
+                onTextChange = screenModel::onSearch,
+                placeholder = "type your search here",
+                title = "Compose Skeleton"
+            )
         },
     ) {
         Box(
