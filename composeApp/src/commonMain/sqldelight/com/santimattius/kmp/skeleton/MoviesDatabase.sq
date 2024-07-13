@@ -7,7 +7,7 @@ CREATE TABLE MovieEntity (
     overview TEXT NOT NULL,
     favorite INTEGER AS Boolean DEFAULT 0
 );
--- table view view
+-- table virtual table
 CREATE VIRTUAL TABLE MovieEntityView USING fts5(
     id INTEGER PRIMARY KEY NOT NULL,
     title TEXT NOT NULL,
