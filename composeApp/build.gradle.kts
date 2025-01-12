@@ -50,6 +50,7 @@ kotlin {
             implementation(libs.koin.android)
 
             implementation(libs.sqldelight.android.driver)
+            implementation(libs.sqlite.android)
         }
         commonMain.dependencies {
             implementation(compose.runtime)

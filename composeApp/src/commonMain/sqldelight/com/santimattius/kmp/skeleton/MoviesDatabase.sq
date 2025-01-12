@@ -7,7 +7,48 @@ CREATE TABLE MovieEntity (
     overview TEXT NOT NULL,
     favorite INTEGER AS Boolean DEFAULT 0
 );
+-- table virtual table
+CREATE VIRTUAL TABLE MovieEntityView USING fts5(
+    id INTEGER PRIMARY KEY NOT NULL,
+    title TEXT NOT NULL,
+    image TEXT NOT NULL,
+    overview TEXT NOT NULL,
+    favorite INTEGER AS Boolean DEFAULT 0
+);
 
+-- triggers
+CREATE TRIGGER launch_after_insert
+AFTER INSERT ON MovieEntity
+BEGIN
+  INSERT INTO MovieEntityView (
+    id,
+    title,
+    image,
+    overview,
+    favorite
+  )
+  VALUES (
+    new.id,
+    new.title,
+    new.image,
+    new.overview,
+    new.favorite
+  );
+END;
+
+
+CREATE TRIGGER launch_after_update
+AFTER UPDATE ON MovieEntity
+BEGIN
+  UPDATE MovieEntityView SET
+    title = new.title,
+    image = new.image,
+    overview = new.overview,
+    favorite = new.favorite
+  WHERE id = new.id;
+END;
+
+-- operations
 selectAll:
 SELECT * FROM MovieEntity;
 
@@ -15,3 +56,8 @@ insert:
 INSERT INTO MovieEntity(id,title,image,overview)
 VALUES(?, ?, ?,?)
 ON CONFLICT (id) DO UPDATE SET title=excluded.title, image=excluded.image,overview=excluded.overview;
+
+search:
+SELECT *
+FROM MovieEntityView
+WHERE title MATCH :queryString OR overview MATCH :queryString;
